@@ -1,61 +1,71 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=0.75">
-    <script>
-      const wrap = (s) => s.replace(
-        /(?![^\n]{1,60}$)([^\n]{1,60})\s/g, '$1\n'
-      );
-
-      function choose(some_array) {
-        return some_array[Math.floor(Math.random()*some_array.length)]
-      }
-
-      function getRndInteger(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) ) + min;
-      }
-
-      function d(how_many, sides){
-        var total = 0;
-        var i;
-        for (i = 0; i < how_many; i++) {
-          total += getRndInteger(1, sides);
-        }
-        return total;
-      }
-
-      class Belligerent {
-				constructor (ac=9, hd=1, dmg=6, thac0=20, move=40, morale=7) {
-          this.ac = ac;
-          this.hd = hd;
-					this.dmg = dmg;
-					this.thac0 = thac0;
-					this.move = move;
-					this.morale = morale;
-					this.hp = 0;
-					for (var i = 0; i < hd; i++) {
-						this.hp += d(1, 8);
-					}
-				}
-				attack (foe) {
-					if (this.thac0 - d(1, 20) <= foe.ac) {
-						var damage = d(1, this.dmg);
-						foe.hp -= damage;
-						console.log(`hit for ${damage} damage!`);
-					} else {
-						console.log('miss');
-					}
-				}
-      }
-    </script>
-  </head>
-  <body>
+</head>
+<body>
     <div style="max-width:500px; margin:auto">
-      <h1 style="font-family:'Eagle Lake';text-align:center;">OSR ARENA!</h1>
+        <h1 style="font-family:'Eagle Lake';text-align:center;">OSR ARENA!</h1>
     </div>
-  </body>
+    <script>
+        const wrap = (s) => s.replace(
+            /(?![^\n]{1,60}$)([^\n]{1,60})\s/g, '$1\n'
+        );
+        
+        function choose(some_array) {
+            return some_array[Math.floor(Math.random()*some_array.length)];
+        }
+        
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) ) + min;
+        }
+        
+        function d(how_many, sides){
+            let total = 0;
+            let i;
+            for (i = 0; i < how_many; i++) {
+                total += getRndInteger(1, sides);
+            }
+            return total;
+        }
+        
+        class Belligerent {
+            constructor (name, ac=9, hd=1, dmg=6, thac0=20, move=40, morale=7) {
+                this.name = name;
+                this.ac = ac;
+                this.hd = hd;
+                this.dmg = dmg;
+                this.thac0 = thac0;
+                this.move = move;
+                this.morale = morale;
+                this.hp = 0;
+                for (let i = 0; i < hd; i++) {
+                    this.hp += d(1, 8);
+                }
+            }
+
+            attack (foe) {
+                if (this.thac0 - d(1, 20) <= foe.ac) {
+                    let damage = d(1, this.dmg);
+                    foe.hp -= damage;
+                    console.log(`${this.name} hit ${foe.name} for ${damage} damage!`);
+                    if (foe.hp < 1) {
+                        console.log(`${this.name} has slain ${foe.name}`)
+                    }
+                } else {
+                    console.log(`${this.name} missed.`);
+                }
+            }
+        }
+        let billy = new Belligerent("billy");
+        let bob = new Belligerent("bob", 9, 3);
+        while (bob.hp > 0) {
+            billy.attack(bob);
+        }
+    </script>
+</body>
 </html>
 
